@@ -1,0 +1,71 @@
+/*
+ * (c) Copyright WesternGeco. Unpublished work, created 2011. All rights
+ * reserved under copyright laws. This information is confidential and is
+ * the trade property of WesternGeco. Do not use, disclose, or reproduce
+ * without the prior written permission of the owner.
+ *
+ * File: CircularBufferTest.java
+ * Created: 22. sep. 2011
+ */
+
+package com.asgeirnilsen.blog;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assume.assumeThat;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.junit.Test;
+
+/**
+ * @author ANilsen
+ *
+ */
+public class CircularBufferTest {
+
+    @Test
+    public void emptyShouldReturnNull() {
+        CircularBuffer<Integer> buf = new CircularBuffer<Integer>(10);
+        AtomicInteger idx = buf.index();
+        assertThat(buf.take(idx), nullValue());
+    }
+
+    @Test
+    public void emptyShouldDrainEmptyList() throws Exception {
+        CircularBuffer<Integer> buf = new CircularBuffer<Integer>(10);
+        AtomicInteger idx = buf.index();
+        List<Integer> result = buf.drain(idx);
+        assertThat(result.size(), is(0));
+    }
+
+    @Test
+    public void twoDrainsYieldPartialResults() throws Exception {
+        CircularBuffer<Integer> buf = new CircularBuffer<Integer>(10);
+        AtomicInteger idx = buf.index();
+        for (int i = 0; i < 7; i++)
+            buf.add(i);
+        List<Integer> first = buf.drain(idx);
+        assertThat(first, equalTo(Arrays.asList(0,1,2,3,4,5,6)));
+        for (int i = 7; i < 13; i++)
+            buf.add(i);
+        List<Integer> second = buf.drain(idx);
+        assertThat(second, equalTo(Arrays.asList(7,8,9,10,11,12)));
+    }
+
+    @Test
+    public void whatHappensAtWraparound() throws Exception {
+        CircularBuffer<Integer> buf = new CircularBuffer<Integer>(10);
+        AtomicInteger idx = buf.index();
+        buf.add(1);
+        assumeThat(buf.take(idx), is(1));
+        for (int i = 2; i < 12; i++)
+            buf.add(i);
+        List<Integer> result = buf.drain(idx);
+        assertThat(result.size(), is(0));
+    }
+}
