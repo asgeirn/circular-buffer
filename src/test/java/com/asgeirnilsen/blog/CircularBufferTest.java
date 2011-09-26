@@ -1,13 +1,3 @@
-/*
- * (c) Copyright WesternGeco. Unpublished work, created 2011. All rights
- * reserved under copyright laws. This information is confidential and is
- * the trade property of WesternGeco. Do not use, disclose, or reproduce
- * without the prior written permission of the owner.
- *
- * File: CircularBufferTest.java
- * Created: 22. sep. 2011
- */
-
 package com.asgeirnilsen.blog;
 
 import static org.hamcrest.CoreMatchers.equalTo;
