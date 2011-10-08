@@ -37,14 +37,14 @@ public class CircularBufferTest {
     public void twoDrainsYieldPartialResults() throws Exception {
         CircularBuffer<Integer> buf = new CircularBuffer<Integer>(10);
         AtomicInteger idx = buf.index();
-        for (int i = 0; i < 7; i++)
+        for (int i = 0; i < 10; i++)
             buf.add(i);
         List<Integer> first = buf.drain(idx);
-        assertThat(first, equalTo(Arrays.asList(0,1,2,3,4,5,6)));
-        for (int i = 7; i < 13; i++)
+        assertThat(first, equalTo(Arrays.asList(0,1,2,3,4,5,6,7,8,9)));
+        for (int i = 10; i < 20; i++)
             buf.add(i);
         List<Integer> second = buf.drain(idx);
-        assertThat(second, equalTo(Arrays.asList(7,8,9,10,11,12)));
+        assertThat(second, equalTo(Arrays.asList(10,11,12,13,14,15,16,17,18,19)));
     }
 
     @Test
@@ -53,7 +53,7 @@ public class CircularBufferTest {
         AtomicInteger idx = buf.index();
         buf.add(1);
         assumeThat(buf.take(idx), is(1));
-        for (int i = 2; i < 12; i++)
+        for (int i = 2; i < buf.size()+3; i++)
             buf.add(i);
         List<Integer> result = buf.drain(idx);
         assertThat(result.size(), is(0));

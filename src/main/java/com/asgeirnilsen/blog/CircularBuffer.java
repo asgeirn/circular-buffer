@@ -18,37 +18,50 @@ public class CircularBuffer<T> {
     private final AtomicInteger index = new AtomicInteger(-1);
     private final AtomicReferenceArray<T> buffer;
     private final int size;
+    private final int mask;
 
     public CircularBuffer(int size) {
         assert size > 0 : "Size must be positive";
+        size = size - 1;
+        size = size | (size >> 1);
+        size = size | (size >> 2);
+        size = size | (size >> 4);
+        size = size | (size >> 8);
+        size = size | (size >> 16);
+        size = size + 1;
         this.size = size;
+        this.mask = size - 1;
         buffer = new AtomicReferenceArray<T>(this.size);
     }
 
+    public int size() {
+        return size;
+    }
+
     public void add(T item) {
-        if (index.compareAndSet(size - 1, 0)) {
-            buffer.set(0, item);
-        } else {
-            buffer.set(index.incrementAndGet(), item);
-        }
+        buffer.set(index.incrementAndGet() & mask, item);
     }
 
     public T get(int i) {
-        return buffer.get(i);
+        return buffer.get(i & mask);
     }
 
     public T take(AtomicInteger idx) {
-        int i = index.get();
-        if (idx.compareAndSet(i, i))
+        if (idx.get() >= index.get())
             return null;
-        if (idx.compareAndSet(size - 1, 0))
-            return buffer.get(0);
-        else
-            return buffer.get(idx.incrementAndGet());
+        if (index.get() - idx.get() > size) {
+            idx.lazySet(index.get());
+            return null;
+        }
+        return buffer.get(idx.incrementAndGet() & mask);
     }
 
     public List<T> drain(AtomicInteger idx) {
         List<T> result = new ArrayList<T>();
+        if (index.get() - idx.get() > size) {
+            idx.lazySet(index.get());
+            return result;
+        }
         int i = index.get();
         while (!idx.compareAndSet(i, i)) {
             result.add(take(idx));
