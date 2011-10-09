@@ -12,15 +12,16 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.junit.Test;
 
-public class WaitingCircularBufferTest {
+public class LockingCircularBufferTest {
 
     @Test
     public void testWait() throws InterruptedException, ExecutionException, TimeoutException {
         final ExecutorService executor = Executors.newSingleThreadExecutor();
-        final CircularBuffer<Integer> buffer = new WaitingCircularBuffer<Integer>(2);
+        final CircularBuffer<Integer> buffer = new LockingCircularBuffer<Integer>(2, new ReentrantLock());
         final AtomicInteger i = buffer.index();
         Future<Integer> result = executor.submit(new Callable<Integer>() {
             @Override

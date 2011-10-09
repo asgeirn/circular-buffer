@@ -18,7 +18,12 @@ public class LockingCircularBuffer<T> extends CircularBuffer<T> {
     @Override
     public void add(T item) {
         super.add(item);
-        condition.signalAll();
+        try {
+            lock.lock();
+            condition.signalAll();
+        } finally {
+            lock.unlock();
+        }
     }
 
     @Override
