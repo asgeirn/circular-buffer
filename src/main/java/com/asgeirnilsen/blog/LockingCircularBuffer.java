@@ -4,12 +4,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 
-public class BlockingCircularBuffer<T> extends CircularBuffer<T> {
+public class LockingCircularBuffer<T> extends CircularBuffer<T> {
 
     private final Lock lock;
     private final Condition condition;
 
-    public BlockingCircularBuffer(int size, Lock lock) {
+    public LockingCircularBuffer(int size, Lock lock) {
         super(size);
         this.lock = lock;
         condition = lock.newCondition();
