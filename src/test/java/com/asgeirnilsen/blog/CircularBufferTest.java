@@ -12,10 +12,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Test;
 
-/**
- * @author ANilsen
- *
- */
 public class CircularBufferTest {
 
     @Test
@@ -56,6 +52,6 @@ public class CircularBufferTest {
         for (int i = 2; i < buf.size()+3; i++)
             buf.add(i);
         List<Integer> result = buf.drain(idx);
-        assertThat(result.size(), is(0));
+        assertThat(result, nullValue());
     }
 }

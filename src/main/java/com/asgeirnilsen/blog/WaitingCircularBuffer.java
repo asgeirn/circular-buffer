@@ -11,9 +11,9 @@ public class WaitingCircularBuffer<T> extends CircularBuffer<T> {
     @Override
     public T take(AtomicInteger idx) {
         T result;
-        int counter = 200;
+        int counter = 255;
         while ((result = super.take(idx)) == null) {
-            if (counter > 100)
+            if (counter > 127)
                 counter--;
             else if (counter > 0) {
                 counter--;

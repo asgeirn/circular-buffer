@@ -36,6 +36,4 @@ public class LockingCircularBuffer<T> extends CircularBuffer<T> {
         return result;
     }
 
-
-
 }

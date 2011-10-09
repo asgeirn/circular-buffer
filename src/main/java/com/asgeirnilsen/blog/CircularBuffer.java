@@ -58,16 +58,13 @@ public class CircularBuffer<T> {
     }
 
     public List<T> drain(AtomicInteger idx) {
-        List<T> result = new ArrayList<T>();
         if (index.get() - idx.get() > size) {
-            idx.lazySet(index.get());
-            return result;
+            idx.set(index.get());
+            return null;
         }
-        int i = index.get();
-        while (!idx.compareAndSet(i, i)) {
-            result.add(take(idx));
-            i = index.get();
-        }
+        List<T> result = new ArrayList<T>(index.get()-idx.get());
+        while (idx.get() < index.get())
+            result.add(buffer.get(idx.incrementAndGet() & mask));
         return result;
     }
 
