@@ -39,6 +39,7 @@ public class CircularBuffer<T> {
     }
 
     public void add(T item) {
+        assert item != null : "Item must be non-null";
         buffer.set(index.incrementAndGet() & mask, item);
     }
 
