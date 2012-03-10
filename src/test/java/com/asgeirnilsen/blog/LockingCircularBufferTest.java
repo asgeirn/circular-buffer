@@ -5,6 +5,8 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -36,6 +38,34 @@ public class LockingCircularBufferTest {
 
     @Test
     public void manyReaders() throws Exception {
+        final int size = 100;
+        final ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()*10);
+        final CircularBuffer<Integer> buffer = new LockingCircularBuffer<Integer>(2, new ReentrantLock(true));
 
+        final List<Callable<Integer>> callables = new ArrayList<Callable<Integer>>(size);
+        callables.add(new Callable<Integer>() {
+            @Override
+            public Integer call() throws Exception {
+                MILLISECONDS.sleep(500);
+                buffer.add(42);
+                return 42;
+            }
+        });
+        for (int i = 0; i < size; i++) {
+            callables.add(new Callable<Integer>() {
+                final AtomicInteger idx = buffer.index();
+
+                @Override
+                public Integer call() throws Exception {
+                    return buffer.take(idx);
+                }
+            });
+        }
+
+        final List<Future<Integer>> results = executor.invokeAll(callables, 60, SECONDS);
+        for (Future<Integer> f : results) {
+            assertThat(f.isCancelled(), is(false));
+            assertThat(f.get(), is(42));
+        }
     }
 }

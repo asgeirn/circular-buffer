@@ -13,9 +13,9 @@ public class WaitingCircularBuffer<T> extends CircularBuffer<T> {
         T result;
         int counter = 255;
         while ((result = super.take(idx)) == null) {
-            if (counter > 127)
+            if (counter > 127) {
                 counter--;
-            else if (counter > 0) {
+            } else if (counter > 0) {
                 counter--;
                 Thread.yield();
             } else {
@@ -28,6 +28,5 @@ public class WaitingCircularBuffer<T> extends CircularBuffer<T> {
         }
         return result;
     }
-
 
 }
