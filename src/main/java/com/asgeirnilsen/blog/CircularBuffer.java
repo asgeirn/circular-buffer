@@ -54,7 +54,7 @@ public class CircularBuffer<T> {
             idx.lazySet(index.get());
             return null;
         }
-        return buffer.get(idx.incrementAndGet() & mask);
+        return get(idx.incrementAndGet());
     }
 
     public List<T> drain(AtomicInteger idx) {
@@ -64,7 +64,7 @@ public class CircularBuffer<T> {
         }
         List<T> result = new ArrayList<T>(index.get()-idx.get());
         while (idx.get() < index.get())
-            result.add(buffer.get(idx.incrementAndGet() & mask));
+            result.add(get(idx.incrementAndGet()));
         return result;
     }
 
