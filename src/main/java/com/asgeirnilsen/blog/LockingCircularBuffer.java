@@ -1,6 +1,6 @@
 package com.asgeirnilsen.blog;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 
@@ -27,7 +27,7 @@ public class LockingCircularBuffer<T> extends CircularBuffer<T> {
     }
 
     @Override
-    public T take(AtomicInteger idx) {
+    public T take(AtomicLong idx) {
         T result;
         while ((result = super.take(idx)) == null)
             try {

@@ -1,6 +1,7 @@
 package com.asgeirnilsen.blog;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+
 
 public class WaitingCircularBuffer<T> extends CircularBuffer<T> {
 
@@ -9,7 +10,7 @@ public class WaitingCircularBuffer<T> extends CircularBuffer<T> {
     }
 
     @Override
-    public T take(AtomicInteger idx) {
+    public T take(AtomicLong idx) {
         T result;
         int counter = 255;
         while ((result = super.take(idx)) == null) {

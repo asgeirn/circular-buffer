@@ -11,7 +11,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeoutException;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.junit.Test;
 
@@ -21,7 +21,7 @@ public class WaitingCircularBufferTest {
     public void testWait() throws InterruptedException, ExecutionException, TimeoutException {
         final ExecutorService executor = Executors.newSingleThreadExecutor();
         final CircularBuffer<Integer> buffer = new WaitingCircularBuffer<Integer>(2);
-        final AtomicInteger i = buffer.index();
+        final AtomicLong i = buffer.index();
         Future<Integer> result = executor.submit(new Callable<Integer>() {
             @Override
             public Integer call() throws Exception {

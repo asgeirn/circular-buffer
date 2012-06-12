@@ -2,20 +2,20 @@ package com.asgeirnilsen.blog;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 
 /**
  * A lock-free thread safe circular fixed length buffer.
  *
- * Uses an AtomicInteger as index counter and an AtomicReferenceArray to hold the references to the values.
+ * Uses an AtomicLong as index counter and an AtomicReferenceArray to hold the references to the values.
  *
  * When the buffer is full, the oldest item is overwritten.
  *
  */
 public class CircularBuffer<T> {
 
-    private final AtomicInteger index = new AtomicInteger(-1);
+    private final AtomicLong index = new AtomicLong(-1);
     private final AtomicReferenceArray<T> buffer;
     private final int size;
     private final int mask;
@@ -40,14 +40,14 @@ public class CircularBuffer<T> {
 
     public void add(T item) {
         assert item != null : "Item must be non-null";
-        buffer.set(index.incrementAndGet() & mask, item);
+        buffer.set((int) (index.incrementAndGet() & mask), item);
     }
 
-    public T get(int i) {
-        return buffer.get(i & mask);
+    public T get(long i) {
+        return buffer.get((int) (i & mask));
     }
 
-    public T take(AtomicInteger idx) {
+    public T take(AtomicLong idx) {
         if (idx.get() >= index.get())
             return null;
         if (index.get() - idx.get() > size) {
@@ -57,18 +57,18 @@ public class CircularBuffer<T> {
         return get(idx.incrementAndGet());
     }
 
-    public List<T> drain(AtomicInteger idx) {
+    public List<T> drain(AtomicLong idx) {
         if (index.get() - idx.get() > size) {
             idx.set(index.get());
             return null;
         }
-        List<T> result = new ArrayList<T>(index.get()-idx.get());
+        List<T> result = new ArrayList<T>((int) (index.get()-idx.get()));
         while (idx.get() < index.get())
             result.add(get(idx.incrementAndGet()));
         return result;
     }
 
-    public AtomicInteger index() {
-        return new AtomicInteger(index.get());
+    public AtomicLong index() {
+        return new AtomicLong(index.get());
     }
 }

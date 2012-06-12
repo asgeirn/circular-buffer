@@ -13,7 +13,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeoutException;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.junit.Test;
@@ -24,7 +24,7 @@ public class LockingCircularBufferTest {
     public void testWait() throws InterruptedException, ExecutionException, TimeoutException {
         final ExecutorService executor = Executors.newSingleThreadExecutor();
         final CircularBuffer<Integer> buffer = new LockingCircularBuffer<Integer>(2, new ReentrantLock(true));
-        final AtomicInteger i = buffer.index();
+        final AtomicLong i = buffer.index();
         Future<Integer> result = executor.submit(new Callable<Integer>() {
             @Override
             public Integer call() throws Exception {
@@ -53,7 +53,7 @@ public class LockingCircularBufferTest {
         });
         for (int i = 0; i < size; i++) {
             callables.add(new Callable<Integer>() {
-                final AtomicInteger idx = buffer.index();
+                final AtomicLong idx = buffer.index();
 
                 @Override
                 public Integer call() throws Exception {
