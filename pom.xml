@@ -11,7 +11,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.9</version>
+      <version>4.10</version>
     </dependency>
   </dependencies>
   <build>
@@ -19,7 +19,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.3</version>
+        <version>2.5.1</version>
         <configuration>
           <source>1.6</source>
           <target>1.6</target>
@@ -27,4 +27,9 @@
       </plugin>
     </plugins>
   </build>
+  <scm>
+    <connection>scm:git:git://github.com/asgeirn/circular-buffer.git</connection>
+    <developerConnection>scm:git:ssh://github.com/asgeirn/circular-buffer.git</developerConnection>
+    <url>https://github.com/asgeirn/circular-buffer</url>
+  </scm>
 </project>
