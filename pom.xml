@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.asgeirnilsen.blog</groupId>
   <artifactId>circular-buffer</artifactId>
-  <version>1.0</version>
+  <version>1.0-SNAPSHOT</version>
   <name>circular-buffer</name>
   <description>A Lock Free Concurrent Circular Buffer</description>
   <url>http://blog.asgeirnilsen.com/2011/09/lock-free-concurrent-circular-buffer.html</url>
@@ -28,7 +28,7 @@
   </build>
   <scm>
     <connection>scm:git:git://github.com/asgeirn/circular-buffer.git</connection>
-    <developerConnection>scm:git:ssh://github.com/asgeirn/circular-buffer.git</developerConnection>
+    <developerConnection>scm:git:git@github.com:asgeirn/circular-buffer.git</developerConnection>
     <url>https://github.com/asgeirn/circular-buffer</url>
   </scm>
 </project>
