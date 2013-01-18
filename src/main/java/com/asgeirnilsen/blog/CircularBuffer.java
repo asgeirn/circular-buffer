@@ -18,19 +18,10 @@ public class CircularBuffer<T> {
     private final AtomicLong index = new AtomicLong(-1);
     private final AtomicReferenceArray<T> buffer;
     private final int size;
-    private final int mask;
 
     public CircularBuffer(int size) {
         assert size > 0 : "Size must be positive";
-        size = size - 1;
-        size = size | (size >> 1);
-        size = size | (size >> 2);
-        size = size | (size >> 4);
-        size = size | (size >> 8);
-        size = size | (size >> 16);
-        size = size + 1;
         this.size = size;
-        this.mask = size - 1;
         buffer = new AtomicReferenceArray<T>(this.size);
     }
 
@@ -40,11 +31,11 @@ public class CircularBuffer<T> {
 
     public void add(T item) {
         assert item != null : "Item must be non-null";
-        buffer.set((int) (index.incrementAndGet() & mask), item);
+        buffer.set((int) (index.incrementAndGet() % size), item);
     }
 
     public T get(long i) {
-        return buffer.get((int) (i & mask));
+        return buffer.get((int) (i % size));
     }
 
     public T take(AtomicLong idx) {
