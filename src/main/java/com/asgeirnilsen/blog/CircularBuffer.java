@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicReferenceArray;
  */
 public class CircularBuffer<T> {
 
-    private final AtomicLong index = new AtomicLong(-1);
+    private final AtomicLong index = new AtomicLong(0);
     private final AtomicReferenceArray<T> buffer;
     private final int size;
 
@@ -31,7 +31,7 @@ public class CircularBuffer<T> {
 
     public void add(T item) {
         assert item != null : "Item must be non-null";
-        buffer.set((int) (index.incrementAndGet() % size), item);
+        buffer.set((int) (index.getAndIncrement() % size), item);
     }
 
     public T get(long i) {
@@ -45,7 +45,7 @@ public class CircularBuffer<T> {
             idx.lazySet(index.get());
             return null;
         }
-        return get(idx.incrementAndGet());
+        return get(idx.getAndIncrement());
     }
 
     public List<T> drain(AtomicLong idx) {
@@ -55,7 +55,7 @@ public class CircularBuffer<T> {
         }
         List<T> result = new ArrayList<T>((int) (index.get()-idx.get()));
         while (idx.get() < index.get())
-            result.add(get(idx.incrementAndGet()));
+            result.add(get(idx.getAndIncrement()));
         return result;
     }
 
