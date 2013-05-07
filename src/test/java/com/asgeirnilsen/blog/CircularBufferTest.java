@@ -1,13 +1,27 @@
 package com.asgeirnilsen.blog;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeThat;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Queue;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.junit.Test;
@@ -54,4 +68,50 @@ public class CircularBufferTest {
         List<Integer> result = buf.drain(idx);
         assertThat(result, nullValue());
     }
+
+    @Test
+    public void concurrentProducers() throws Exception {
+        final int size = 1024*1024;
+        final CircularBuffer<Integer> buffer = new CircularBuffer<Integer>(size);
+        AtomicLong index = buffer.index();
+        final Queue<Integer> input = new ConcurrentLinkedQueue<Integer>();
+        for (int i = 1; i <= size; i++)
+            input.add(i);
+        assertEquals(size, input.size());
+        int parallelism = Runtime.getRuntime().availableProcessors();
+        System.out.println("Running " + parallelism + " threads...");
+        Set<Callable<Void>> tasks = new HashSet<Callable<Void>>();
+        for (int i = 0; i < parallelism; i++)
+            tasks.add(new Callable<Void>() {
+                @Override
+                public Void call() throws Exception {
+                    while (true) {
+                        buffer.add(input.remove());
+                    }
+                }
+            });
+        ExecutorService executorService = Executors.newFixedThreadPool(parallelism);
+        List<Future<Void>> result = executorService.invokeAll(tasks, 30, SECONDS);
+        assertEquals(parallelism, result.size());
+        for (Future<Void> r : result) {
+            assertTrue(r.isDone());
+        }
+        assertEquals(0, input.size());
+
+        List<Integer> outputList = new ArrayList<Integer>(size);
+        SortedSet<Integer> outputSet = new TreeSet<Integer>();
+        while (true) {
+            Integer ref = buffer.take(index);
+            if (ref == null)
+                break;
+            outputList.add(ref);
+            outputSet.add(ref);
+        }
+        assertEquals(size, outputList.size());
+        assertEquals(size, outputSet.size());
+        assertEquals(1, (int)outputSet.first());
+        assertEquals(size, (int)outputSet.last());
+    }
+
+
 }
