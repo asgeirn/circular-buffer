@@ -113,5 +113,37 @@ public class CircularBufferTest {
         assertEquals(size, (int)outputSet.last());
     }
 
+    @Test
+    public void concurrentConsumers() throws Exception {
+        final int size = 1024*1024;
+        final CircularBuffer<Integer> buffer = new CircularBuffer<Integer>(size);
+        for (int i = 1; i <= size; i++)
+            buffer.add(i);
+        final int parallelism = Runtime.getRuntime().availableProcessors();
+        System.out.println("Running " + parallelism + " threads...");
+        Set<Callable<List<Integer>>> tasks = new HashSet<Callable<List<Integer>>>();
+        for (int i = 0; i < parallelism; i++)
+            tasks.add(new Callable<List<Integer>>() {
+                @Override
+                public List<Integer> call() throws Exception {
+                    List<Integer> result = new ArrayList<Integer>(size);
+                    AtomicLong index = new AtomicLong();
+                    while (true) {
+                        Integer ref = buffer.take(index);
+                        if (ref == null)
+                            break;
+                        result.add(ref);
+                    }
+                    return result;
+                }
+            });
+        ExecutorService executorService = Executors.newFixedThreadPool(parallelism);
+        List<Future<List<Integer>>> result = executorService.invokeAll(tasks, 30, SECONDS);
+        assertEquals(parallelism, result.size());
+        for (Future<List<Integer>> f : result) {
+            assertTrue(f.isDone());
+            assertEquals(size, f.get().size());
+        }
+    }
 
 }
