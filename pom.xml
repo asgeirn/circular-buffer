@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.asgeirnilsen.blog</groupId>
   <artifactId>circular-buffer</artifactId>
-  <version>1.2-SNAPSHOT</version>
+  <version>1.2</version>
   <name>circular-buffer</name>
   <description>A Lock Free Concurrent Circular Buffer</description>
   <url>http://blog.asgeirnilsen.com/2011/09/lock-free-concurrent-circular-buffer.html</url>
