@@ -9,6 +9,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeThat;
 
+import java.nio.BufferOverflowException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -57,7 +58,7 @@ public class CircularBufferTest {
         assertThat(second, equalTo(Arrays.asList(10,11,12,13,14,15,16,17,18,19)));
     }
 
-    @Test
+    @Test(expected = BufferOverflowException.class)
     public void whatHappensAtWraparound() throws Exception {
         CircularBuffer<Integer> buf = new CircularBuffer<Integer>(10);
         AtomicLong idx = buf.index();
@@ -65,8 +66,7 @@ public class CircularBufferTest {
         assumeThat(buf.take(idx), is(1));
         for (int i = 2; i < buf.size()+3; i++)
             buf.add(i);
-        List<Integer> result = buf.drain(idx);
-        assertThat(result, nullValue());
+        buf.drain(idx);
     }
 
     @Test
@@ -146,4 +146,13 @@ public class CircularBufferTest {
         }
     }
 
+    @Test(expected = BufferOverflowException.class)
+    public void bufferOverflow() throws Exception {
+        final CircularBuffer<Integer> buffer = new CircularBuffer<Integer>(8);
+        AtomicLong r = buffer.index();
+        for (int i = 0; i < 10; ++i)
+            buffer.add(i);
+        buffer.take(r);
+    }
 }
+

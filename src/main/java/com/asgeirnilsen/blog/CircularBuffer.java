@@ -1,5 +1,6 @@
 package com.asgeirnilsen.blog;
 
+import java.nio.BufferOverflowException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
@@ -43,7 +44,7 @@ public class CircularBuffer<T> {
             return null;
         if (index.get() - idx.get() > size) {
             idx.lazySet(index.get());
-            return null;
+            throw new BufferOverflowException();
         }
         return get(idx.getAndIncrement());
     }
@@ -51,7 +52,7 @@ public class CircularBuffer<T> {
     public List<T> drain(AtomicLong idx) {
         if (index.get() - idx.get() > size) {
             idx.set(index.get());
-            return null;
+            throw new BufferOverflowException();
         }
         List<T> result = new ArrayList<T>((int) (index.get()-idx.get()));
         while (idx.get() < index.get())
