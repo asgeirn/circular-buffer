@@ -1,4 +1,4 @@
-package com.asgeirnilsen.blog;
+package no.twingine;
 
 import java.nio.BufferOverflowException;
 import java.util.ArrayList;

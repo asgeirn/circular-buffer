@@ -1,4 +1,4 @@
-package com.asgeirnilsen.blog;
+package no.twingine;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 
@@ -16,6 +16,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+
+import no.twingine.CircularBuffer;
+import no.twingine.LockingCircularBuffer;
+import no.twingine.WaitingCircularBuffer;
 
 @RunWith(Parameterized.class)
 public class PerformanceTest {

@@ -1,4 +1,4 @@
-package com.asgeirnilsen.blog;
+package no.twingine;
 
 import java.util.concurrent.atomic.AtomicLong;
 

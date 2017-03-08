@@ -1,4 +1,4 @@
-package com.asgeirnilsen.blog;
+package no.twingine;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -26,6 +26,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.junit.Test;
+
+import no.twingine.CircularBuffer;
 
 public class CircularBufferTest {
 

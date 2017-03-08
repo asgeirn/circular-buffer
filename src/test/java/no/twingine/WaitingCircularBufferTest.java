@@ -1,4 +1,4 @@
-package com.asgeirnilsen.blog;
+package no.twingine;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -14,6 +14,9 @@ import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.junit.Test;
+
+import no.twingine.CircularBuffer;
+import no.twingine.WaitingCircularBuffer;
 
 public class WaitingCircularBufferTest {
 

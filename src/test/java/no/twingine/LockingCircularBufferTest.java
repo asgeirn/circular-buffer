@@ -1,4 +1,4 @@
-package com.asgeirnilsen.blog;
+package no.twingine;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -17,6 +17,9 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.junit.Test;
+
+import no.twingine.CircularBuffer;
+import no.twingine.LockingCircularBuffer;
 
 public class LockingCircularBufferTest {
 
