@@ -1,5 +1,7 @@
 # Lock Free Concurrent Circular Buffer
 
+[![Build Status](https://travis-ci.org/asgeirn/circular-buffer.svg?branch=master)](https://travis-ci.org/asgeirn/circular-buffer)
+
 It supports multiple independent readers, so many consumers can get updates to this circular buffer.
 
 It is lock free, so neither writers nor readers will block.  If you try to `take()` on a buffer with no updates a null is returned, and if you `drain()` a buffer with no updates you get an empty list.
