@@ -2,7 +2,7 @@ language: java
 
 deploy:
   provider: script
-  script: "mvn versions:set -DnewVersion=$TRAVIS_TAG && mvn deploy -Dregistry=https://maven.pkg.github.com/asgeirn -Dtoken=$GH_TOKEN"
+  script: "mvn versions:set -DnewVersion=$TRAVIS_TAG && mvn deploy -DskipTests -Dregistry=https://maven.pkg.github.com/asgeirn -Dtoken=$GH_TOKEN"
   skip_cleanup: true
   on:
     tags: true
