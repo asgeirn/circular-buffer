@@ -45,4 +45,11 @@
     <developerConnection>scm:git:git@github.com:asgeirn/circular-buffer.git</developerConnection>
     <url>https://github.com/asgeirn/circular-buffer</url>
   </scm>
+  <distributionManagement>
+   <repository>
+     <id>github</id>
+     <name>GitHub Apache Maven Packages</name>
+     <url>https://maven.pkg.github.com/asgeirn/circular-buffer</url>
+   </repository>
+</distributionManagement>
 </project>
