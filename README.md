@@ -1,6 +1,6 @@
 # Lock Free Concurrent Circular Buffer
 
-[![Build Status](https://travis-ci.org/asgeirn/circular-buffer.svg?branch=master)](https://travis-ci.org/asgeirn/circular-buffer)
+![Build Status](https://github.com/asgeirn/circular-buffer/actions/workflows/maven.yml/badge.svg)
 
 It supports multiple independent readers, so many consumers can get updates to this circular buffer.
 
